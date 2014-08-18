@@ -1,0 +1,4 @@
+#main-container{min-height: 500px;}
+#page-footer{background: #c0c0c0;padding: 15px 0;}
+h1,h2,h3{color: #3498db;}
+.form-control-feedback {position: absolute; top: 35px;}
