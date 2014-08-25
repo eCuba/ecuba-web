@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.ecuba.domain.ClientApp" schema="public" table="clients">
+		<id name="id" type="string">
+			<column name="id_client_app" />
+			<generator class="assigned" />
+		</id>
+
+		<property name="clientId" type="string" unique="true">
+			<column name="client_id" not-null="true" unique="true"/>
+		</property>
+		<property name="clientSecret" type="string">
+			<column name="client_secret" not-null="true" />
+		</property>
+	</class>
+</hibernate-mapping>

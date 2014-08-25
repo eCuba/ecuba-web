@@ -12,6 +12,7 @@
 			<list>
                 <value>/WEB-INF/config/props/hibernate.properties</value>
                 <value>/WEB-INF/config/props/dbcp.properties</value>
+                <value>/WEB-INF/config/props/ecuba.properties</value>
 			</list>
 		</property>
 	</bean>

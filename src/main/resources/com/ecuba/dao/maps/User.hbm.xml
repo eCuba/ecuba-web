@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.ecuba.domain.User" schema="public" table="users">
+		<id name="id" type="string">
+			<column name="id_user" />
+			<generator class="assigned" />
+		</id>
+
+		<property name="username" type="string" unique="true">
+			<column name="username" not-null="true" unique="true"/>
+		</property>
+		<property name="password" type="string">
+			<column name="password" not-null="true" />
+		</property>
+		<property name="active" type="integer" length="1">
+			<column name="active" not-null="true" />
+		</property>
+
+	</class>
+</hibernate-mapping>

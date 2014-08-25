@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int-mail="http://www.springframework.org/schema/integration/mail"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-file="http://www.springframework.org/schema/integration/file"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:int-http="http://www.springframework.org/schema/integration/http"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       http://www.springframework.org/schema/integration/mail http://www.springframework.org/schema/integration/mail/spring-integration-mail-4.0.xsd
+       http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
+       http://www.springframework.org/schema/util             http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd">
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="ecuba.com"/>
+        <property name="username" value="rolo"/>
+        <property name="password" value="metal"/>
+    </bean>
+
+
+    <int-mail:inbound-channel-adapter should-delete-messages="false" id="pollEcubaEmailTest"
+            channel="inboundMailChannel" java-mail-properties="javaMailProperties"
+            store-uri="imap://rolo:metal@ecuba.com:143/INBOX"
+            mail-filter-expression="subject == 'ecuba-test'">
+        <int:poller fixed-rate="5000"/>
+
+    </int-mail:inbound-channel-adapter>
+
+    <int:channel id="inboundMailChannel"/>
+
+
+    <int:chain input-channel="inboundMailChannel" output-channel="outboundMailChannel">
+        <int:transformer ref="clientEmailTransformer"/>
+        <!--<int:header-enricher>
+            <int:header name="mail_from" value="rolo@ecuba.com"/>
+            <int:header name="mail_subject" value="ecuba-test-response"/>
+            <int:header name="mail_to" value="test@ecuba.com"/>
+        </int:header-enricher>-->
+    </int:chain>
+
+    <bean id="clientEmailTransformer" class="com.ecuba.integration.ClientEmailTransformer"/>
+
+    <int:channel id="outboundMailChannel"/>
+
+    <int-mail:outbound-channel-adapter id="sent-ecuba-email"
+                                       channel="outboundMailChannel"
+            mail-sender="mailSender">
+    </int-mail:outbound-channel-adapter>
+
+
+
+    <!-- another example -->
+
+    <int-mail:inbound-channel-adapter id="poll-for-email"
+                                      channel="inboundChannel"
+                                      java-mail-properties="javaMailProperties"
+                                      store-uri="imap://rolo:metal@ecuba.com:143/INBOX"
+                                      should-delete-messages="true"
+                                      mail-filter-expression="subject == 'ecuba-app'">
+    <int:poller fixed-rate="5000"/>
+    </int-mail:inbound-channel-adapter>
+
+    <util:properties id="javaMailProperties">
+        <prop key="mail.store.protocol">imap</prop>
+        <prop key="mail.debug">false</prop>
+    </util:properties>
+
+    <util:properties id="outjavaMailProperties">
+        <prop key="mail.store.protocol">smtp</prop>
+        <prop key="mail.debug">false</prop>
+    </util:properties>
+    <int:channel id="inboundChannel"/>
+
+    <int:chain id="transform-split" input-channel="inboundChannel" output-channel="outputChannel">
+        <int:transformer>
+            <bean class="com.ecuba.integration.EmailTransformer"/>
+        </int:transformer>
+        <int:splitter>
+            <bean class="com.ecuba.integration.EmailSplitter"/>
+        </int:splitter>
+    </int:chain>
+
+    <int:channel id="outputChannel"/>
+
+    <int-file:outbound-channel-adapter  id="save-as-file"
+                                        auto-create-directory="true"
+                                        channel="outputChannel"
+                                        directory="/Volumes/Data"/>
+
+
+</beans>
