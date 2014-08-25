@@ -26,7 +26,8 @@
             /WEB-INF/config/context/ecuba-spring-security.xml,
             /WEB-INF/config/context/ecuba-dataaccess-context.xml,
             /WEB-INF/config/context/ecuba-email-context.xml,
-            /WEB-INF/config/context/ecuba-business-context.xml
+            /WEB-INF/config/context/ecuba-business-context.xml,
+            /WEB-INF/config/context/ecuba-solr-context.xml
         </param-value>
     </context-param>
 
