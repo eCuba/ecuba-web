@@ -4,20 +4,21 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
+import java.util.List;
+
 /**
  * Created by rolando on 2014-08-22.
  */
 
-@SolrDocument(solrCoreName = "collection1")
-public class User extends PersistentObject<String>{
+public class User extends PersistentObject<String> implements BusinessOwner{
 
-    protected @Id @Indexed String id;
+	private String username;
 
-	private @Indexed("username") String username;
-
-	private @Indexed("password") String password;
+	private String password;
 
 	private Integer active;
+
+	private List<Business> businesses;
 
 	public void setUsername(String username) {
 		this.username = username;
@@ -41,5 +42,15 @@ public class User extends PersistentObject<String>{
 
 	public Integer getActive() {
 		return active;
+	}
+
+	@Override
+	public List<Business> getBusinesses() {
+		return businesses;
+	}
+
+	@Override
+	public void setBusinesses(List<Business> businesses) {
+		this.businesses = businesses;
 	}
 }

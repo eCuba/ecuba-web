@@ -37,4 +37,10 @@ public class SystemController {
 	public List<User> getUsers() {
 		return systemFacade.getUsers();
 	}
+
+	@RequestMapping(value = "rest/item/{businessItemClass}", method = RequestMethod.POST)
+	public Object newBusinessItems(@PathVariable String businessItemClass){
+
+		return null;
+	}
 }
